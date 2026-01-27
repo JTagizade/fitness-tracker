@@ -28,8 +28,13 @@ const workoutsSlice = createSlice({
     setWorkouts(state, action: PayloadAction<Workout[]>) {
       state.workouts = action.payload
     },
+    updateWorkout(state, action: PayloadAction<{ id: string; name: string; date: string }>) {
+      state.workouts = state.workouts.map(w =>
+        w.id === action.payload.id ? { ...w, ...action.payload } : w
+      )
+    },
   },
 })
 
-export const { addWorkout, removeWorkout, setWorkouts } = workoutsSlice.actions
+export const { addWorkout, removeWorkout, setWorkouts, updateWorkout } = workoutsSlice.actions
 export default workoutsSlice.reducer

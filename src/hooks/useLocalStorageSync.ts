@@ -1,22 +1,23 @@
-import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from '../store'
 import { setWorkouts } from '../store/workoutsSlice'
+import { useEffect } from 'react'
 
 export const useLocalStorageSync = () => {
-  const workouts = useSelector((state: RootState) => state.workouts.workouts)
   const dispatch = useDispatch()
+  const workouts = useSelector((state: RootState) => state.workouts.workouts)
+  const username = useSelector((state: RootState) => state.user.username)
 
   useEffect(() => {
-    const saved = localStorage.getItem('workouts')
-    if (saved) {
-        dispatch(setWorkouts(JSON.parse(saved)))
-    }
-  }, [])
+    if (!username) return
+    const allWorkouts = JSON.parse(localStorage.getItem('workouts') || '{}')
+    dispatch(setWorkouts(allWorkouts[username] || []))
+  }, [username, dispatch])
 
   useEffect(() => {
-    if (workouts.length) {
-      localStorage.setItem('workouts', JSON.stringify(workouts))
-    }
-  }, [workouts])
+    if (!username) return
+    const allWorkouts = JSON.parse(localStorage.getItem('workouts') || '{}')
+    allWorkouts[username] = workouts
+    localStorage.setItem('workouts', JSON.stringify(allWorkouts))
+  }, [username, workouts])
 }
