@@ -2,12 +2,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '../../store'
 import { removeWorkout } from '../../store/workoutsSlice'
 
+interface Workout {
+  id: string
+  name: string
+  date: string
+}
+
 interface WorkoutSessionsListProps {
-  setEditWorkout: (workout: { id: string; name: string; date: string }) => void
+  setEditWorkout: (workout: Workout) => void
 }
 
 export const WorkoutSessionsList = ({ setEditWorkout }: WorkoutSessionsListProps) => {
-  const workouts = useSelector((state: RootState) => state.workouts.workouts)    
+  const workouts = useSelector((state: RootState) => state.workouts.workouts)
+  const username = useSelector((state: RootState) => state.user.username)
   const dispatch = useDispatch()
 
   return (
@@ -20,13 +27,18 @@ export const WorkoutSessionsList = ({ setEditWorkout }: WorkoutSessionsListProps
           {workouts.map(w => (
             <li key={w.id}>
               {w.name} - {w.date}
-                <button
+              <button
                 onClick={() => setEditWorkout(w)}
                 style={{ marginLeft: '6px' }}
               >
                 Edit
               </button>
-              <button onClick={() => dispatch(removeWorkout(w.id))}>
+              <button
+                onClick={() => {
+                  if (!username) return
+                  dispatch(removeWorkout({ id: w.id, username }))
+                }}
+              >
                 Delete
               </button>
             </li>

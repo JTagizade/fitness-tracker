@@ -22,6 +22,8 @@ interface WorkoutLogFormProps {
   setEditWorkout?: (w: Workout | null) => void
 }
 
+// ...imports stay the same
+
 export const WorkoutLogForm = ({
   editWorkout,
   setEditWorkout,
@@ -56,13 +58,20 @@ export const WorkoutLogForm = ({
             )
 
             saveWorkouts(username, updated)
-            dispatch(updateWorkout({ id: editWorkout.id, ...values }))
+            dispatch(
+              updateWorkout({
+                id: editWorkout.id,
+                name: values.name,
+                date: values.date,
+                username, // <- added
+              })
+            )
             setEditWorkout?.(null)
           } else {
             const workout: Workout = { id: uuid(), ...values }
 
             saveWorkouts(username, [...current, workout])
-            dispatch(addWorkout(workout))
+            dispatch(addWorkout({ workout, username })) // <- added
           }
 
           resetForm()
@@ -89,3 +98,4 @@ export const WorkoutLogForm = ({
     </Container>
   )
 }
+

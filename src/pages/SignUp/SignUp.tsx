@@ -1,11 +1,11 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik'
-import { useDispatch } from 'react-redux'
+// import { useDispatch } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
-import { setUser } from '../../store/userSlice'
+// import { setUser } from '../../store/userSlice'
 import { Container, FormField, LinkText, Page } from './SignUp.styles'
 
 export const SignUp = () => {
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
   const navigate = useNavigate()
 
   return (
@@ -23,11 +23,13 @@ export const SignUp = () => {
           onSubmit={(values, { resetForm }) => {
             localStorage.setItem(
               'user',
-              JSON.stringify({ username: values.username, password: values.password })
+              JSON.stringify({
+                username: values.username,
+                password: values.password,
+              })
             )
-            dispatch(setUser({ username: values.username }))
             resetForm()
-            navigate('/')
+            navigate('/signin')
           }}
         >
           <Form>

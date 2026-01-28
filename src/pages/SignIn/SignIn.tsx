@@ -28,12 +28,14 @@ export const SignIn = () => {
             return errors
           }}
           onSubmit={(values, { resetForm }) => {
-            const savedUser = JSON.parse(localStorage.getItem('user') || '{}')
+            const savedUser = JSON.parse(localStorage.getItem('user') || 'null')
             if (
+              savedUser &&
               savedUser.username === values.username &&
               savedUser.password === values.password
-              ) {
-              dispatch(setUser({ username: values.username }))
+            ) {
+              dispatch(setUser({ username: savedUser.username }))
+              navigate('/')
             } else {
               alert('User not found or password incorrect')
             }

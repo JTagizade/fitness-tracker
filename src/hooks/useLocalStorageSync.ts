@@ -5,19 +5,15 @@ import { useEffect } from 'react'
 
 export const useLocalStorageSync = () => {
   const dispatch = useDispatch()
-  const workouts = useSelector((state: RootState) => state.workouts.workouts)
   const username = useSelector((state: RootState) => state.user.username)
 
   useEffect(() => {
-    if (!username) return
-    const allWorkouts = JSON.parse(localStorage.getItem('workouts') || '{}')
-    dispatch(setWorkouts(allWorkouts[username] || []))
-  }, [username, dispatch])
+    if (!username) {
+      dispatch(setWorkouts([]))
+      return
+    }
 
-  useEffect(() => {
-    if (!username) return
-    const allWorkouts = JSON.parse(localStorage.getItem('workouts') || '{}')
-    allWorkouts[username] = workouts
-    localStorage.setItem('workouts', JSON.stringify(allWorkouts))
-  }, [username, workouts])
+    const stored = localStorage.getItem(`workouts_${username}`)
+    dispatch(setWorkouts(stored ? JSON.parse(stored) : []))
+  }, [username, dispatch])
 }

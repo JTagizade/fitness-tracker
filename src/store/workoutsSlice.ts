@@ -15,26 +15,58 @@ const initialState: WorkoutsState = {
   workouts: [],
 }
 
+const saveToStorage = (username: string, workouts: Workout[]) => {
+  localStorage.setItem(`workouts_${username}`, JSON.stringify(workouts))
+}
+
 const workoutsSlice = createSlice({
   name: 'workouts',
   initialState,
   reducers: {
-    addWorkout(state, action: PayloadAction<Workout>) {
-      state.workouts.push(action.payload)
-    },
-    removeWorkout(state, action: PayloadAction<string>) {
-      state.workouts = state.workouts.filter(w => w.id !== action.payload)
-    },
     setWorkouts(state, action: PayloadAction<Workout[]>) {
       state.workouts = action.payload
     },
-    updateWorkout(state, action: PayloadAction<{ id: string; name: string; date: string }>) {
+
+    addWorkout(
+      state,
+      action: PayloadAction<{ workout: Workout; username: string }>
+    ) {
+      state.workouts.push(action.payload.workout)
+      saveToStorage(action.payload.username, state.workouts)
+    },
+
+    removeWorkout(
+      state,
+      action: PayloadAction<{ id: string; username: string }>
+    ) {
+      state.workouts = state.workouts.filter(w => w.id !== action.payload.id)
+      saveToStorage(action.payload.username, state.workouts)
+    },
+
+    updateWorkout(
+      state,
+      action: PayloadAction<{
+        id: string
+        name: string
+        date: string
+        username: string
+      }>
+    ) {
       state.workouts = state.workouts.map(w =>
-        w.id === action.payload.id ? { ...w, ...action.payload } : w
+        w.id === action.payload.id
+          ? { id: w.id, name: action.payload.name, date: action.payload.date }
+          : w
       )
+      saveToStorage(action.payload.username, state.workouts)
     },
   },
 })
 
-export const { addWorkout, removeWorkout, setWorkouts, updateWorkout } = workoutsSlice.actions
+export const {
+  addWorkout,
+  removeWorkout,
+  setWorkouts,
+  updateWorkout,
+} = workoutsSlice.actions
+
 export default workoutsSlice.reducer
