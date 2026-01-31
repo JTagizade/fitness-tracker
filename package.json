@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",
+    "dateformat": "^5.0.3",
     "formik": "^2.4.9",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-icons": "^5.5.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.13.0",
     "styled-components": "^6.3.8",
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@types/dateformat": "^5.0.3",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",

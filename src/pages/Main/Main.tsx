@@ -1,4 +1,4 @@
-import { Container, Column, Header, SignOut } from './Main.styles'
+import { Container, Column, Header, SignOut, CentralColumn } from './Main.styles'
 import { DashboardStats, WorkoutLogForm, WorkoutSessionsList } from '../../components'
 import { useLocalStorageSync } from '../../hooks'
 import { useState, useEffect } from 'react'
@@ -42,9 +42,9 @@ export const Main = () => {
         <Column>
           <WorkoutSessionsList setEditWorkout={setEditWorkout} />
         </Column>
-        <Column>
+        <CentralColumn>
           <DashboardStats />
-        </Column>
+        </CentralColumn>
         <Column>
           <WorkoutLogForm
             editWorkout={editWorkout}

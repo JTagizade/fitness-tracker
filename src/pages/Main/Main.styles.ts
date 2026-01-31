@@ -9,15 +9,19 @@ export const Container = styled.div`
 
 export const Column = styled.div`
   flex: 1;
-  padding: 16px;
   box-sizing: border-box;
-  border: 1px solid #ccc;
+`
+export const CentralColumn = styled.div`
+  flex: 1.65;
+  box-sizing: border-box;
 `
 
 export const Header = styled.div`
   display: flex;
   justify-content: flex-end;
   padding: 12px 24px;
+  background: #94a3b8;
+  border-bottom: 2px solid #fb923c;
 `
 
 export const SignOut = styled.button`
