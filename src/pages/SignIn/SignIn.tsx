@@ -34,6 +34,7 @@ export const SignIn = () => {
               const user = users[values.username]
 
               if (user && user.password === values.password) {
+                localStorage.setItem('sessionUser', values.username)
                 dispatch(setUser({ username: values.username }))
                 navigate('/app')
               } else {

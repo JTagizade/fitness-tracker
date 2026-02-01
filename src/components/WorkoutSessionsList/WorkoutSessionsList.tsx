@@ -4,9 +4,8 @@ import { removeWorkout } from '../../store/workoutsSlice'
 import dateFormat from 'dateformat';
 import { GrEdit } from "react-icons/gr";
 import { RiDeleteBinLine } from "react-icons/ri";
-
-
-import { FormattedSessionDate, ListHeader, ListLabel, MuscleGroup, SessionDate, SessionOrder, SessionsList, SessionsListUl, WorkoutSession } from './WorkoutSessionsList.styles'
+import { FormattedSessionDate, ListHeader, ListLabel, MuscleGroup, SessionActions, SessionDate, SessionName, SessionOrder, SessionsList, SessionsListUl, WorkoutSession } from './WorkoutSessionsList.styles'
+import { useEffect, useRef } from 'react';
 
 interface Workout {
   id: string
@@ -23,7 +22,16 @@ export const WorkoutSessionsList = ({ setEditWorkout }: WorkoutSessionsListProps
   const username = useSelector((state: RootState) => state.user.username)
   const dispatch = useDispatch()
 
-  
+  const sessionsListRef = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    if (sessionsListRef.current) {
+      sessionsListRef.current.scrollTo({
+        top: sessionsListRef.current.scrollHeight,
+        behavior: 'smooth',
+      })
+    }
+  }, [workouts])
   
   return (
     <SessionsList>
@@ -38,23 +46,22 @@ export const WorkoutSessionsList = ({ setEditWorkout }: WorkoutSessionsListProps
       {workouts.length === 0 ? (
         <p>Bruuuh, hit the gym</p>
       ) : (
-        <SessionsListUl>
+        <SessionsListUl ref={sessionsListRef}>
           {workouts.map(w => (
             <WorkoutSession key={w.id}>
               <SessionOrder>{workouts.indexOf(w) + 1}</SessionOrder>
               <FormattedSessionDate>{dateFormat(w.date, "dd - mmmm")}</FormattedSessionDate>
               <MuscleGroup>
-                {w.name}
-
-                <GrEdit onClick={() => setEditWorkout(w)}/>
-                <RiDeleteBinLine onClick={() => {
-                    if (!username) return
-                    dispatch(removeWorkout({ id: w.id, username }))
-                  }}
-                />
+                <SessionName title={w.name}>{w.name}</SessionName>
+                <SessionActions>
+                  <GrEdit onClick={() => setEditWorkout(w)}/>
+                  <RiDeleteBinLine onClick={() => {
+                      if (!username) return
+                      dispatch(removeWorkout({ id: w.id, username }))
+                    }}
+                  />              
+                </SessionActions>
               </MuscleGroup>
-             
-
             </WorkoutSession>
           ))}
         </SessionsListUl>

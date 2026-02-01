@@ -29,6 +29,7 @@ export const Main = () => {
   }, [username, dispatch])
 
   const handleSignOut = () => {
+    localStorage.removeItem('sessionUser')
     dispatch(clearUser())
     navigate('/')
   }

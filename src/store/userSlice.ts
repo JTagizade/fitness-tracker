@@ -7,7 +7,7 @@ interface UserState {
 }
 
 const initialState: UserState = {
-  username: null,
+  username: localStorage.getItem('sessionUser'),
 }
 
 export const userSlice = createSlice({

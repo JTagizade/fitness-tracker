@@ -11,6 +11,7 @@ export const ListLabel = styled.div`
   height: 80px; 
   background: #025987;
   text-align: center;
+  color: #fff;
 `
 
 export const ListHeader = styled.div`
@@ -29,18 +30,39 @@ export const SessionOrder = styled.div`
 export const SessionDate = styled.div`
   width: 30%;
   padding: 8px;
+  background: #fb923c;
   border-left: 2px solid #000;
   border-right: 2px solid #000;
 `
 export const MuscleGroup = styled.div`
   padding: 8px;
   width: 63%;
+  display: flex;
+  justify-content: space-between;
+`
+export const SessionName = styled.div`
+  overflow: hidden;
+  width: 240px;
+  height: 100%;
+  padding-bottom: 4px;
+  text-align: left;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+`
+export const SessionActions = styled.div`
+  display: flex;
+  gap: 8px;
+  color: #44444430;
+  cursor: pointer;
 `
 
 export const SessionsListUl = styled.ul`
   margin: 0;
   list-style: none;
   padding: 0;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  padding-bottom: 160px;
 `
 
 export const WorkoutSession = styled.li`
@@ -48,14 +70,24 @@ export const WorkoutSession = styled.li`
   background: #94a3b8;
   height: 40px; 
   display: flex;
-  text-align: center;    
+  text-align: center; 
+
+    &:hover ${SessionActions} {
+    & > :first-child {
+      color: #025987;
+    }
+
+    & > :last-child {
+      color: green;
+    }
+  }    
 `
 
 export const FormattedSessionDate = styled.div`
   width: 30%;
   padding: 8px;
   background: #fb923c;
-  border-left: 2px solid transparent;
-  border-right: 2px solid transparent;
+  border-left: 2px solid #94a3b8;
+  border-right: 2px solid #94a3b8;
 `
 
