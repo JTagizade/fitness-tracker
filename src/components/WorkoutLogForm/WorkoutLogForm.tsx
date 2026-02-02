@@ -1,16 +1,15 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik'
+import { Formik, Form, ErrorMessage } from 'formik'
 import { useDispatch, useSelector } from 'react-redux'
 import { addWorkout, updateWorkout } from '../../store/workoutsSlice'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
-import { Container, FormField, FormLabel, Tag, Tags, StyledField, ErrorText } from './WorkoutLogForm.styles'
+import { Container, FormLabel, Tag, Tags, StyledField, ErrorText, StyledButton, FormWraper, CalendarWrapper, InputWrapper } from './WorkoutLogForm.styles'
 import { saveWorkouts, getWorkouts } from '../../utils/workoutStorage'
 import type { RootState } from '../../store'
-
-interface Values {
-  name: string
-  date: string
-}
+import { BsBackspace } from "react-icons/bs";
+import Calendar from 'react-calendar';
+import type { Value } from 'react-calendar/src/shared/types.js'
+import 'react-calendar/dist/Calendar.css';
 
 interface Workout {
   id: string
@@ -23,7 +22,7 @@ interface WorkoutLogFormProps {
   setEditWorkout?: (w: Workout | null) => void
 }
 
-const muscleGroupsInitValue = ['Chest', 'Back', 'Legs', 'Shoulders', 'Biceps', 'Triceps', 'Abs'];
+const muscleGroupsInitValue = ['Chest', 'Back', 'Legs', 'Abs', 'Shoulders', 'Biceps', 'Triceps'];
 
 export const WorkoutLogForm = ({
   editWorkout,
@@ -34,12 +33,13 @@ export const WorkoutLogForm = ({
   
   const [muscleGroups, setMuscleGroups] = useState(muscleGroupsInitValue);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  
-  // const tagRemover = (e: string) => {
-  //   let i = muscleGroups.indexOf(e);
-  //   muscleGroups.splice(i, 1);
-  //   setMuscleGroups(muscleGroups);
-  // }  
+  const [dateValue, setDateValue] = useState<Value>(
+    editWorkout ? new Date(editWorkout.date) : new Date()
+  )
+
+  useEffect(() => {
+    if (editWorkout) setDateValue(new Date(editWorkout.date))
+  }, [editWorkout])
 
   return (
     <Container>
@@ -47,93 +47,101 @@ export const WorkoutLogForm = ({
         <h2>{editWorkout ? 'Edit Workout' : 'Log Workout'}</h2>
       </FormLabel>
 
-      <Formik<Values>
+      <Formik
         enableReinitialize
         initialValues={{
           name: editWorkout?.name || '',
-          date: editWorkout?.date || '',
         }}
         validate={(values) => {
-          const errors: Partial<Values> = {}
-          if (!values.name.trim()) errors.name = 'Required'
-          if (!values.date) errors.date = 'Required'
+          const errors: Partial<{ name: string }> = {}
+          if (!values.name.trim() && selectedTags.length === 0) errors.name = 'Required'
+          if (!dateValue) errors.name = 'Date required'
           return errors
         }}
-        onSubmit={(values, { resetForm }) => {
-          if (!username) return
-
+        onSubmit={(_, { resetForm }) => {
+          if (!username || !dateValue) return
+          const formattedDate = (dateValue as Date).toLocaleDateString('en-CA')
           const current: Workout[] = getWorkouts(username)
 
           if (editWorkout) {
-            const updated: Workout[] = current.map((w) =>
+            if (!selectedTags.length) return alert('Workout name required')
+
+            const updated = current.map(w =>
               w.id === editWorkout.id
-                ? { ...w, name: selectedTags.join(', '), date: values.date }
+                ? { ...w, name: selectedTags.join(', '), date: formattedDate }
                 : w
             )
 
             saveWorkouts(username, updated)
-            dispatch(
-              updateWorkout({
-                id: editWorkout.id,
-                name: selectedTags.join(', '),
-                date: values.date,
-                username,
-              })
-            )
+            dispatch(updateWorkout({
+              id: editWorkout.id,
+              name: selectedTags.join(', '),
+              date: formattedDate,
+              username
+            }))
             setEditWorkout?.(null)
           } else {
             const workout: Workout = {
               id: uuid(),
               name: selectedTags.join(', '),
-              date: values.date,
+              date: formattedDate,
             }
+
             saveWorkouts(username, [...current, workout])
-            dispatch(addWorkout({ workout, username }))
+            dispatch(addWorkout({workout, username}))
           }
+
           resetForm()
+          setDateValue(new Date())
           setSelectedTags([])
           setMuscleGroups(muscleGroupsInitValue)
         }}
-      >
+      >        
         {({ setFieldValue }) => (
           <Form>
-          <Tags>
-            {muscleGroups.map((e) => 
-            <Tag 
-            onClick={() => {
-              const newSelected = [...selectedTags, e]
-              // tagRemover(e);     
-              setMuscleGroups(prev => prev.filter(m => m !== e))       
-              setFieldValue('name', newSelected.join(', '));   
-              return  setSelectedTags(newSelected);
-            }} 
-            >
-              {e}
-            </Tag>)}
-          </Tags>  
+            <FormWraper>
+              <CalendarWrapper>
+                <Calendar onChange={date => setDateValue(date)} value={dateValue} />
+              </CalendarWrapper>
+              <Tags>
+                {muscleGroups.map((e) => 
+                <Tag 
+                key={e.toLowerCase()}
+                onClick={() => {
+                  const newSelected = [...selectedTags, e]
+                  setMuscleGroups(prev => prev.filter(m => m !== e))       
+                  setFieldValue('name', newSelected.join(', '));   
+                  return  setSelectedTags(newSelected);
+                }} 
+                >
+                  {e}
+                </Tag>)}
+              </Tags>  
 
-          <FormField>
-            {/* <label>Workout Name:</label> */}
-            <StyledField
-              name="name"
-              placeholder="Select a muscle group"
-              value={selectedTags.join(', ')}
-              readOnly
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('name', e.target.value)}
-            />
-            <ErrorMessage name="name" render={(msg) => <ErrorText>{msg}</ErrorText>} />
-          </FormField>
+              <div>
+                <InputWrapper>
+                  <StyledField
+                    name="name"
+                    placeholder="Select a muscle group"
+                    value={selectedTags.join(', ')}
+                    readOnly
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('name', e.target.value)}
+                  />
 
-          <FormField>
-            <label>Date:</label>
-            <StyledField type="date" name="date" />
-            <ErrorMessage name="date" render={(msg) => <ErrorText>{msg}</ErrorText>} />
-          </FormField>
+                  <BsBackspace onClick={() => {
+                      setSelectedTags([])
+                      setMuscleGroups(muscleGroupsInitValue)
+                    }}
+                  />
+                </InputWrapper>
+                <ErrorMessage name="name" render={(msg) => <ErrorText>{msg}</ErrorText>} />
+              </div>
 
-          <button type="submit">
-            {editWorkout ? 'Update Workout' : 'Add Workout'}
-          </button>
-        </Form>
+              <StyledButton type="submit">
+                {editWorkout ? 'Update Workout' : 'Add Workout'}
+              </StyledButton>
+            </FormWraper>
+          </Form>
         )}
       </Formik>
     </Container>

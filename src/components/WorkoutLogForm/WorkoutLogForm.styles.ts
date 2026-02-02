@@ -7,14 +7,41 @@ export const Container = styled.div`
   gap: 16px;
   background: #fff;
   height: 100vh;
+  `
+export const FormWraper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 24px;
+  width: 350px;
+  gap: 8px;
+  margin: 0 auto;
+`
+export const CalendarWrapper = styled.div`
+  border-radius: 4px;
+  border: 2px solid #025987;
+
+  .react-calendar {
+    border: none;
+  }
+  
+  .react-calendar__tile--now {
+    background: #fb923c;
+    font-size: large;
+  }
+  .react-calendar__tile--active {
+    background: #025987 !important;
+    font-size: large;
+    color: #fb923c !important;
+  }
+
 `
 export const Tags = styled.div`
-  width: 75%;
   height: 100px;
+  width: fit-content;
   border: 2px solid #025987;
   border-radius: 4px;
   padding: 8px;
-  margin-bottom: 16px;
   display: flex;
   flex-wrap: wrap;
   overflow-y: scroll;
@@ -37,21 +64,32 @@ export const FormLabel = styled.div`
   color: #fff;
 `
 export const StyledField = styled(Field)`
-  width: 75%;
-  height: 20px;
-  background: transparent;
-  border: 2px solid #025987;
-  border-radius: 4px;
+  width: 300px;
+  border: none;
+  font-size: 18px;
   padding: 8px;
   color: #000;
+  outline: none;
 `
 
-export const FormField = styled.div`  
-  margin-bottom: 8px;
-  border: 1px solid #ccc;
-  color: #000;
+export const InputWrapper = styled.div`
+  display: flex;
+  border: 2px solid #025987;
+  border-radius: 4px;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 8px;
 `
 
 export const ErrorText = styled.div`
   color: red;
+  `
+export const StyledButton = styled.button`
+  width: 160px;
+  height: 56px;
+  background: #025987;
+  margin-top: 8px;
+  color: #fff;
+  font-size: 20px;
 `
+
