@@ -19,10 +19,11 @@ export const FormWraper = styled.div`
 `
 export const CalendarWrapper = styled.div`
   border-radius: 4px;
-  border: 2px solid #025987;
+  border: 2px solid #003c82;
 
   .react-calendar {
     border: none;
+    width: auto;
   }
   
   .react-calendar__tile--now {
@@ -30,7 +31,7 @@ export const CalendarWrapper = styled.div`
     font-size: large;
   }
   .react-calendar__tile--active {
-    background: #025987 !important;
+    background: #003c82 !important;
     font-size: large;
     color: #fb923c !important;
   }
@@ -38,8 +39,8 @@ export const CalendarWrapper = styled.div`
 `
 export const Tags = styled.div`
   height: 100px;
-  width: fit-content;
-  border: 2px solid #025987;
+  width: 330px;
+  border: 2px solid #003c82;
   border-radius: 4px;
   padding: 8px;
   display: flex;
@@ -49,17 +50,18 @@ export const Tags = styled.div`
 `
 export const Tag = styled.div`
   height: 30px;
+  line-height: 1.5;
   padding: 0 12px;
   background: #fb923c;
   margin: 4px;
   border-radius: 16px;
-  color: #000;
+  color: #003c82;
   cursor: pointer;
 `
 
 export const FormLabel = styled.div`
   height: 80px; 
-  background: #025987;
+  background: #003c82;
   text-align: center;
   color: #fff;
 `
@@ -68,13 +70,13 @@ export const StyledField = styled(Field)`
   border: none;
   font-size: 18px;
   padding: 8px;
-  color: #000;
+  color: #003c82;
   outline: none;
 `
 
 export const InputWrapper = styled.div`
   display: flex;
-  border: 2px solid #025987;
+  border: 2px solid #003c82;
   border-radius: 4px;
   justify-content: space-between;
   align-items: center;
@@ -87,7 +89,7 @@ export const ErrorText = styled.div`
 export const StyledButton = styled.button`
   width: 160px;
   height: 56px;
-  background: #025987;
+  background: #003c82;
   margin-top: 8px;
   color: #fff;
   font-size: 20px;

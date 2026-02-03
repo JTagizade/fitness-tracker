@@ -9,7 +9,7 @@ export const SessionsList = styled.div`
 
 export const ListLabel = styled.div`
   height: 80px; 
-  background: #025987;
+  background: #003c82;
   text-align: center;
   color: #fff;
 `
@@ -17,6 +17,7 @@ export const ListLabel = styled.div`
 export const ListHeader = styled.div`
   display: flex;
   flex-direction: row;
+  line-height: 1.5;
   height: 44px; 
   background: #94a3b8;
   border: 1px solid #000;
