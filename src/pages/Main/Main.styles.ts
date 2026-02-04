@@ -12,7 +12,7 @@ export const Column = styled.div`
   box-sizing: border-box;
 `
 export const CentralColumn = styled.div`
-  flex: 1.65;
+  flex: 2;
   box-sizing: border-box;
 `
 

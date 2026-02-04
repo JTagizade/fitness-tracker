@@ -4,7 +4,7 @@ import { removeWorkout } from '../../store/workoutsSlice'
 import dateFormat from 'dateformat';
 import { GrEdit } from "react-icons/gr";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { FormattedSessionDate, ListHeader, ListLabel, MuscleGroup, SessionActions, SessionDate, SessionName, SessionOrder, SessionsList, SessionsListUl, WorkoutSession } from './WorkoutSessionsList.styles'
+import { FormattedSessionDate, ListHeader, ListLabel, MuscleGroup, NoSessionGif, SessionActions, SessionDate, SessionName, SessionOrder, SessionsList, SessionsListUl, WorkoutSession } from './WorkoutSessionsList.styles'
 import { useEffect, useRef } from 'react';
 
 interface Workout {
@@ -44,7 +44,10 @@ export const WorkoutSessionsList = ({ setEditWorkout }: WorkoutSessionsListProps
         <MuscleGroup>Muscle Group</MuscleGroup>       
       </ListHeader>
       {workouts.length === 0 ? (
-        <p>Bruuuh, hit the gym</p>
+        <NoSessionGif>
+          <p>Bruuuh, hit the gym</p>
+          <img src="https://www.basic-fit.com/on/demandware.static/-/Library-Sites-basic-fit-shared-library/default/dwc811438f/Blogs/GIFs%20for%20biceps/StraightbarcurlEDITED-ezgif.com-optimize.gif" alt="No workouts" />
+        </NoSessionGif>
       ) : (
         <SessionsListUl ref={sessionsListRef}>
           {workouts.map(w => (
