@@ -38,6 +38,20 @@ export interface WgerExerciseImageResponse {
   results: WgerExerciseImage[]
 }
 
+export interface WgerExerciseVideo {
+  id: number
+  exercise: number
+  video: string
+  is_main: boolean
+}
+
+export interface WgerExerciseVideoResponse {
+  count: number
+  next: string | null
+  previous: string | null
+  results: WgerExerciseVideo[]
+}
+
 export interface WgerMuscle {
   id: number
   name: string
@@ -78,6 +92,14 @@ export const fetchExerciseImages = async (exerciseBaseId: number) => {
   const response = await axios.get<WgerExerciseImageResponse>(
     `${WGER_BASE_URL}/exerciseimage/`,
     { params: { exercise_base: exerciseBaseId, is_main: true } }
+  )
+  return response.data.results
+}
+
+export const fetchExerciseVideos = async (exerciseId: number) => {
+  const response = await axios.get<WgerExerciseVideoResponse>(
+    `${WGER_BASE_URL}/video/`,
+    { params: { exercise: exerciseId } }
   )
   return response.data.results
 }

@@ -7,6 +7,7 @@ import dateFormat from 'dateformat'
 import {
   fetchExerciseImages,
   fetchExercises,
+  fetchExerciseVideos,
   fetchMuscles,
   type WgerExercise,
 } from '../../api/wger'
@@ -14,6 +15,7 @@ import {
 interface ExerciseWithImage {
   exercise: WgerExercise
   imageUrl: string | null
+  videoUrl: string | null
 }
 
 const TAGS = ['Chest', 'Lats', 'Abs', 'Calves', 'Shoulders', 'Biceps', 'Triceps']
@@ -28,7 +30,7 @@ export const DashboardStats = () => {
 
   const totalWorkouts = workouts.length
   const lastWorkout = useMemo(() => {
-    if (!workouts.length) return 'N/A'
+    if (!workouts.length) return null
     return workouts[workouts.length - 1].date
   }, [workouts])
 
@@ -56,29 +58,46 @@ export const DashboardStats = () => {
         muscles: muscle.id,
         language: 2,
         status: 2,
-        limit: 1,
+        limit: 20,
       })
 
-      const ex = exercisesResp.results[0]
-      if (!ex) {
+      if (!exercisesResp.results.length) {
         throw new Error(`No exercises found for ${tag}`)
       }
 
-      const baseId = ex.exercise_base ?? ex.id
+      let selectedExercise = exercisesResp.results[0]
+      let selectedVideos: { video: string | null }[] = []
+
+      for (const candidate of exercisesResp.results) {
+        const vids = await fetchExerciseVideos(candidate.id).catch(() => [])
+        if (vids.length > 0) {
+          selectedExercise = candidate
+          selectedVideos = vids
+          break
+        }
+      }
+
+      const baseId = selectedExercise.exercise_base ?? selectedExercise.id
       const images = await fetchExerciseImages(baseId)
       const imageUrl =
         images.length > 0
           ? images[Math.floor(Math.random() * images.length)].image
           : null
+      const videoUrl =
+        selectedVideos.length > 0 ? selectedVideos[0].video ?? null : null
 
-      return { exercise: ex, imageUrl, tag }
+      return { exercise: selectedExercise, imageUrl, videoUrl, tag }
     }
 
     load()
       .then(result => {
         if (!isMounted) return
         setDailyTag(result.tag)
-        setDailyExercise({ exercise: result.exercise, imageUrl: result.imageUrl })
+        setDailyExercise({
+          exercise: result.exercise,
+          imageUrl: result.imageUrl,
+          videoUrl: result.videoUrl,
+        })
       })
       .catch(err => {
         if (!isMounted) return
@@ -107,24 +126,24 @@ export const DashboardStats = () => {
           <p>
             {dailyExercise.exercise.translations?.[1]?.name ?? 'No name'}
           </p>
-          {dailyExercise.imageUrl ? (
-            <div style={{ border: '1px solid #383838', borderRadius: '4px' }}>
+          {dailyExercise.videoUrl ? (
+            <video width="560" height="315" controls>
+              <source src={dailyExercise.videoUrl ?? ''} type="video/quicktime" />
+            </video>
+            ) : dailyExercise.imageUrl ? (
               <img
                 src={dailyExercise.imageUrl}
-                height="350px"
+                height="350"
                 alt={dailyExercise.exercise.translations?.[1]?.name ?? 'Exercise'}
-                />
-            </div>
-          ) : (
-            <div>No image</div>
-          )}
-        </div>
-      )}
-
-
+              />
+            ) : (
+              <div>No media</div>
+            )}
+                    </div>
+                  )}
       <SessionStats>
         <p>Total Workouts: {totalWorkouts}</p>
-        <p>Last Workout: {dateFormat(lastWorkout, "dd - mmmm")}</p>
+        <p>Last Workout: {lastWorkout ? dateFormat(lastWorkout, "dd - mmmm") : "N/A"}</p>
       </SessionStats>
 
     </Container>
