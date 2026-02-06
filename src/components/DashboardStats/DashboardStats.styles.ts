@@ -19,3 +19,13 @@ export const SessionStats = styled.div`
   background-color: #003c82;
   color: #fff;
 `
+
+export const ExerciseInfo = styled.div`
+  display: flex;
+  flex: 3;
+  justify-content: space-between;
+`
+export const ExerciseName = styled.div`
+  display: flex;
+  flex-direction: column;
+`

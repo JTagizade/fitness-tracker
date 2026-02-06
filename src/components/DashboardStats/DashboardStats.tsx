@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import { useEffect, useMemo, useState } from 'react'
 import type { RootState } from '../../store'
-import { Container, SessionStats } from './DashboardStats.styles'
+import { Container, ExerciseInfo, ExerciseName, SessionStats } from './DashboardStats.styles'
 import PieChartComponent from '../PieChart/PieChartComponent'
 import dateFormat from 'dateformat'
 import {
@@ -117,30 +117,45 @@ export const DashboardStats = () => {
     <Container>
       <PieChartComponent />
 
+      <ExerciseInfo>
 
-      {exerciseLoading && <p>Loading...</p>}
-      {exerciseError && <p>{exerciseError}</p>}
-      {!exerciseLoading && !exerciseError && dailyExercise && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', height: '360px', paddingLeft: '16px', alignItems: 'center' }}>
-          <h3>Today’s recommended exercise ({dailyTag})</h3>
-          <p>
-            {dailyExercise.exercise.translations?.[1]?.name ?? 'No name'}
-          </p>
-          {dailyExercise.videoUrl ? (
-            <video width="560" height="315" controls>
-              <source src={dailyExercise.videoUrl ?? ''} type="video/quicktime" />
-            </video>
-            ) : dailyExercise.imageUrl ? (
-              <img
-                src={dailyExercise.imageUrl}
-                height="350"
-                alt={dailyExercise.exercise.translations?.[1]?.name ?? 'Exercise'}
-              />
+        {exerciseLoading && <p>Loading...</p>}
+        {exerciseError && <p>{exerciseError}</p>}
+        {!exerciseLoading && !exerciseError && dailyExercise && (
+          <ExerciseName>
+            <h3>Today’s recommended exercise ({dailyTag})</h3>
+            <p>
+              {dailyExercise.exercise.translations?.[1]?.name ?? 'No name'}
+            </p>
+
+            {dailyExercise.videoUrl ? (
+              <a href={dailyExercise.videoUrl} target="_blank" rel="noreferrer">
+                Watch video
+              </a>
             ) : (
-              <div>No media</div>
+              <div>No video</div>
             )}
-                    </div>
-                  )}
+          </ExerciseName>
+          )}
+
+        {!exerciseLoading && !exerciseError && dailyExercise && (
+            <>
+              {dailyExercise.imageUrl ? (
+                <img
+                  src={dailyExercise.imageUrl}
+                  height="350"
+                  alt={dailyExercise.exercise.translations?.[1]?.name ?? 'Exercise'}
+                />
+              ) : (
+                <div>No image</div>
+              )}
+            </>
+          )}
+
+
+          </ExerciseInfo>
+                    
+
       <SessionStats>
         <p>Total Workouts: {totalWorkouts}</p>
         <p>Last Workout: {lastWorkout ? dateFormat(lastWorkout, "dd - mmmm") : "N/A"}</p>
