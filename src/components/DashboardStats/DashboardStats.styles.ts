@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { RxVideo } from "react-icons/rx";
 
 export const Container = styled.div`
   display: flex;
@@ -22,10 +23,30 @@ export const SessionStats = styled.div`
 
 export const ExerciseInfo = styled.div`
   display: flex;
-  flex: 3;
-  justify-content: space-between;
+  justify-content: space-around;
+  align-items: center;
 `
 export const ExerciseName = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 0px;
+
+   a{
+    text-decoration: none;
+    color: #003c82;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+   }
+
+   a:hover{
+    color: blue;
+   }
+
+`
+
+export const StyledVideoIcon = styled(RxVideo)`
+  font-size: 32px;
+
 `

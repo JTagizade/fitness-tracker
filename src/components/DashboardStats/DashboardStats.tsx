@@ -1,9 +1,10 @@
 import { useSelector } from 'react-redux'
 import { useEffect, useMemo, useState } from 'react'
 import type { RootState } from '../../store'
-import { Container, ExerciseInfo, ExerciseName, SessionStats } from './DashboardStats.styles'
+import { Container, ExerciseInfo, ExerciseName, SessionStats, StyledVideoIcon } from './DashboardStats.styles'
 import PieChartComponent from '../PieChart/PieChartComponent'
 import dateFormat from 'dateformat'
+
 import {
   fetchExerciseImages,
   fetchExercises,
@@ -123,14 +124,15 @@ export const DashboardStats = () => {
         {exerciseError && <p>{exerciseError}</p>}
         {!exerciseLoading && !exerciseError && dailyExercise && (
           <ExerciseName>
-            <h3>Today’s recommended exercise ({dailyTag})</h3>
+            <h3>Today’s recommended exercise</h3>
+            <p>Muscle group: {dailyTag}</p>
             <p>
-              {dailyExercise.exercise.translations?.[1]?.name ?? 'No name'}
+              Exercise name: {dailyExercise.exercise.translations?.[1]?.name ?? 'No name'}
             </p>
 
             {dailyExercise.videoUrl ? (
               <a href={dailyExercise.videoUrl} target="_blank" rel="noreferrer">
-                Watch video
+                <StyledVideoIcon /> Watch video 
               </a>
             ) : (
               <div>No video</div>
