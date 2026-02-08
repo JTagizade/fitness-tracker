@@ -6,7 +6,6 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: space-between;
   padding-bottom: 0;
-  /* background-image: url('/src/assets/imgs/grid.png'); */
   background-color: #6d6565;
   height: 100vh;
   overflow: hidden;
